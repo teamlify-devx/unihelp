@@ -1,0 +1,108 @@
+server:
+  SERVER_HEADER: "Teamlify"
+  PROJECT_NAME: "{DOMAIN NAME}"
+  SERVICE_NAME: "{DOMAIN-NAME}"
+  APP_ENV: "development"
+  API_VER: "v1"
+  APP_DEBUG: true
+  APP_PROXY: false
+  TIMEOUT: 15
+  APP_SECRET: "cdc646ac1c326350da0a4436a387737865965d6fcc2f8d812e53"
+  JWT_TOKEN_EXPIRE_TIME: 1440
+  JWT_TOKEN_REMEMBER_EXPIRE_TIME: 30240
+  APP_VERSION: 1.0.0
+  READ_TIMEOUT: 5
+  WRITE_TIMEOUT: 5
+  MAX_CONN_IDLE: 5
+  MAX_CONN_AGE: 5
+  ENABLE_PROFILER: false
+  ENABLE_METRICS: false
+  ENABLE_LOGGER: false
+  ENABLE_DOCS: true
+  ENABLE_RATE_LIMIT: false
+  RATE_LIMIT_MAX: 15
+  RATE_LIMIT_EXP: 60
+  PROJECT_ID: "teamlify"
+  AUTH_API_URL: "http://localhost:8080"
+  CORS_ALLOWED_ORIGINS:
+    - "http://localhost:3000"
+    - "http://localhost:3001"
+    - "http://localhost:3002"
+    -
+grpc:
+  PORT: 8084
+  GRPC_TIMEOUT: 15
+  MAX_MSG_SIZE: 4194304
+  MAX_CONN_IDLE: 5
+  MAX_CONN_AGE: 5
+  ENABLE_KEEPALIVE: true
+  KEEPALIVE_TIME: 10
+  KEEPALIVE_TIMEOUT: 20
+  KEEPALIVE_PERMIT_WITHOUT_STREAM: true
+  ENABLE_TLS: false
+  TLS_CERT_FILE: "path/to/cert.pem"
+  TLS_KEY_FILE: "path/to/key.pem"
+
+http:
+  PORT: 8083
+
+logger:
+  DISABLE_CALLER: false
+  DISABLE_STACKTRACE: false
+  ENCODING: json
+  LEVEL: info
+  LOG_ENV: "development"
+
+postgresql:
+  HOST: "127.0.0.1"
+  PORT: 5432
+  USER: "DB_USER"
+  PASS: "PASSWORD"
+  DEFAULT_DB: "DEFAULT_DB"
+  DEFAULT_SCHEMA: "DEFAULT_SCHEMA"
+  MAX_CONN: 10
+  DRIVER: "pgx"
+
+redis:
+  HOST: "127.0.0.1"
+  PORT: 6379
+  USER: "default"
+  PASS: "PASSWORD"
+  DEFAULT_DB: 1
+  MIN_IDLE_CONN: 5
+  POOL_SIZE: 5
+  POOL_TIMEOUT: 20
+  DEF_TTL: 540
+
+queue:
+  SMS_QUEUE_NORMAL: "sms"
+  SMS_QUEUE_NORMAL_TEMPLATE: "normal_sms_template"
+  SMS_QUEUE_OTP: "otp_sms"
+  SMS_QUEUE_OTP_TEMPLATE: "otp_sms_template"
+
+  PUSH_QUEUE_DATA: "push_data"
+  PUSH_QUEUE_DATA_TEMPLATE: "push_data_template"
+  PUSH_QUEUE_NOTIFY: "push_big"
+  PUSH_QUEUE_NOTIFY_TEMPLATE: "push_template"
+
+  MAIL_QUEUE_NORMAL: "normal_mail"
+  MAIL_QUEUE_NORMAL_TEMPLATE: "mail"
+  MAIL_QUEUE_OTP: "otp_mail"
+  MAIL_QUEUE_OTP_TEMPLATE: "otp_mail_template"
+
+pubsub:
+  PROJECT_ID: "GCP PROJ NAME"
+  CONFIG_PATH: "config/gcp_sa_key.json"
+
+kafka:
+  BROKERS:
+    - "localhost:19092"
+    - "localhost:19093"
+    - "localhost:19094"
+  CLIENT_ID: "auth-broker-client"
+  REQUEST_TIMEOUT_OVERHEAD: 10
+  CONNECTION_IDLE_TIMEOUT: 10
+  PRODUCER_BATCH_MAX_BYTES: 1000000
+  PRODUCER_LINGER: 10
+  MAX_CONCURRENT_FETCHES: 3
+  ALLOW_AUTO_TOPIC_CREATION: true
