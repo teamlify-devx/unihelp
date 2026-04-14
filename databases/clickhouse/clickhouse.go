@@ -12,7 +12,7 @@ import (
 )
 
 // NewClickHouseDB Return new Click House client
-func NewClickHouseDB(ctx context.Context) (db driver.Conn, err error) {
+func NewClickHouseDB() (db driver.Conn, err error) {
 
 	db, err = clickhouse.Open(&clickhouse.Options{
 		Addr: cfg.GetStringSlice("clickhouse.HOSTS"),
@@ -28,6 +28,9 @@ func NewClickHouseDB(ctx context.Context) (db driver.Conn, err error) {
 	if err != nil {
 		return nil, err
 	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), cfg.GetDuration("clickhouse.CONN_TIMEOUT")*time.Second)
+	defer cancel()
 
 	if err = db.Ping(ctx); err != nil {
 		var exception *clickhouse.Exception
