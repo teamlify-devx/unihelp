@@ -20,11 +20,18 @@ func NewKafkaClient(ctx context.Context) (client *kgo.Client, err error) {
 		kgo.ProducerLinger(cfg.GetDuration("Kafka.PRODUCER_LINGER") * time.Millisecond),
 		kgo.RequiredAcks(kgo.AllISRAcks()),
 		kgo.MaxConcurrentFetches(cfg.GetInt("Kafka.MAX_CONCURRENT_FETCHES")),
+		kgo.ConsumerGroup(cfg.GetString("Kafka.CONSUMER_GROUP")),
 	}
 
 	if cfg.GetBool("Kafka.ALLOW_AUTO_TOPIC_CREATION") == true {
 		opts = append(opts,
 			kgo.AllowAutoTopicCreation(),
+		)
+	}
+
+	if cfg.GetBool("Kafka.ALLOW_CONSUMER_GROUP") == true {
+		opts = append(opts,
+			kgo.ConsumerGroup(cfg.GetString("Kafka.CONSUMER_GROUP")),
 		)
 	}
 
