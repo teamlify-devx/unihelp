@@ -31,6 +31,7 @@ Example Config yaml:
   ENABLE_PRODUCER: false
   ENABLE_CONSUMER: true
   CONSUMER_GROUP: "audit-consumer-group"
+  RETRY_BACK_OFF: 50
   ENABLE_TUNING: true
   TUNING:
     FETCH_MIN_BYTES: 1e5
@@ -63,7 +64,10 @@ func NewKafkaClient(ctx context.Context) (client *kgo.Client, err error) {
 	if cfg.GetBool("kafka.ENABLE_CONSUMER") == true {
 		opts = append(opts,
 			kgo.ConsumerGroup(cfg.GetString("kafka.CONSUMER_GROUP")),
-			kgo.ConsumeTopics(cfg.GetString("kafka.TOPICS")),
+			kgo.ConsumeTopics(cfg.GetStringSlice("kafka.TOPICS")...),
+			kgo.RetryBackoffFn(func(_ int) time.Duration {
+				return 50 * time.Millisecond
+			}),
 		)
 	}
 
