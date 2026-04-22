@@ -24,7 +24,7 @@ func NewDFClientSingle(dbNum int) (db *redis.Client, err error) {
 		DB:           dbNum,
 	})
 
-	ctx, cancel := context.WithTimeout(context.Background(), cfg.GetDuration("postgresql.CONN_TIMEOUT")*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), cfg.GetDuration("dragonfly.CONN_TIMEOUT"))
 	defer cancel()
 
 	err = db.Ping(ctx).Err()
@@ -40,13 +40,13 @@ func NewDFClientCluster() (db *redis.ClusterClient, err error) {
 		Password:     cfg.GetString("dragonfly.PASS"),
 		MinIdleConns: cfg.GetInt("dragonfly.MIN_IDLE_CONN"),
 		PoolSize:     cfg.GetInt("dragonfly.POOL_SIZE"),
-		PoolTimeout:  time.Duration(cfg.GetInt("dragonfly.POOL_TIMEOUT")),
-		MaxRetries:   5,
+		PoolTimeout:  cfg.GetDuration("dragonfly.POOL_TIMEOUT"),
+		MaxRetries:   cfg.GetInt("dragonfly.MAX_RETRIES"),
 	}
 
 	db = redis.NewClusterClient(opt)
 
-	ctx, cancel := context.WithTimeout(context.Background(), cfg.GetDuration("postgresql.CONN_TIMEOUT")*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), cfg.GetDuration("dragonfly.CONN_TIMEOUT"))
 	defer cancel()
 
 	err = db.Ping(ctx).Err()

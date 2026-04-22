@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
@@ -21,7 +20,7 @@ func NewClickHouseDB() (db driver.Conn, err error) {
 			Username: cfg.GetString("clickhouse.USER"),
 			Password: cfg.GetString("clickhouse.PASS"),
 		},
-		DialTimeout:  cfg.GetDuration("clickhouse.DIAL_TIMEOUT") * time.Second,
+		DialTimeout:  cfg.GetDuration("clickhouse.DIAL_TIMEOUT"),
 		MaxOpenConns: cfg.GetInt("clickhouse.MIN_OPEN_CONN"),
 	})
 
@@ -29,7 +28,7 @@ func NewClickHouseDB() (db driver.Conn, err error) {
 		return nil, err
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), cfg.GetDuration("clickhouse.CONN_TIMEOUT")*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), cfg.GetDuration("clickhouse.CONN_TIMEOUT"))
 	defer cancel()
 
 	if err = db.Ping(ctx); err != nil {

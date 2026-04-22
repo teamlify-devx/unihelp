@@ -42,8 +42,8 @@ func NewKafkaClient(ctx context.Context) (client *kgo.Client, err error) {
 	opts := []kgo.Opt{
 		kgo.SeedBrokers(cfg.GetStringSlice("kafka.BROKERS")...),
 		kgo.ClientID(cfg.GetString("kafka.CLIENT_ID")),
-		kgo.RequestTimeoutOverhead(cfg.GetDuration("kafka.REQUEST_TIMEOUT_OVERHEAD") * time.Second),
-		kgo.ConnIdleTimeout(cfg.GetDuration("kafka.CONNECTION_IDLE_TIMEOUT") * time.Second),
+		kgo.RequestTimeoutOverhead(cfg.GetDuration("kafka.REQUEST_TIMEOUT_OVERHEAD")),
+		kgo.ConnIdleTimeout(cfg.GetDuration("kafka.CONNECTION_IDLE_TIMEOUT")),
 	}
 
 	if cfg.GetBool("kafka.ALLOW_AUTO_TOPIC_CREATION") == true {
@@ -56,7 +56,7 @@ func NewKafkaClient(ctx context.Context) (client *kgo.Client, err error) {
 		opts = append(opts,
 			kgo.ProducerBatchCompression(kgo.SnappyCompression()),
 			kgo.ProducerBatchMaxBytes(cfg.GetInt32("kafka.PRODUCER_BATCH_MAX_BYTES")),
-			kgo.ProducerLinger(cfg.GetDuration("kafka.PRODUCER_LINGER")*time.Millisecond),
+			kgo.ProducerLinger(cfg.GetDuration("kafka.PRODUCER_LINGER")),
 			kgo.RequiredAcks(kgo.AllISRAcks()),
 		)
 	}
@@ -66,7 +66,7 @@ func NewKafkaClient(ctx context.Context) (client *kgo.Client, err error) {
 			kgo.ConsumerGroup(cfg.GetString("kafka.CONSUMER_GROUP")),
 			kgo.ConsumeTopics(cfg.GetStringSlice("kafka.TOPICS")...),
 			kgo.RetryBackoffFn(func(_ int) time.Duration {
-				return 50 * time.Millisecond
+				return cfg.GetDuration("kafka.RETRY_BACK_OFF")
 			}),
 		)
 	}
@@ -74,7 +74,7 @@ func NewKafkaClient(ctx context.Context) (client *kgo.Client, err error) {
 	if cfg.GetBool("kafka.ENABLE_TUNING") == true {
 		opts = append(opts,
 			kgo.FetchMinBytes(cfg.GetInt32("kafka.tuning.FETCH_MIN_BYTES")),
-			kgo.FetchMaxWait(cfg.GetDuration("kafka.tuning.FETCH_MAX_WAIT")*time.Millisecond),
+			kgo.FetchMaxWait(cfg.GetDuration("kafka.tuning.FETCH_MAX_WAIT")),
 			kgo.MaxConcurrentFetches(cfg.GetInt("kafka.tuning.MAX_CONCURRENT_FETCHES")),
 		)
 	}
@@ -87,7 +87,7 @@ func NewKafkaClient(ctx context.Context) (client *kgo.Client, err error) {
 
 	client, err = kgo.NewClient(opts...)
 
-	ctx, cancel := context.WithTimeout(ctx, cfg.GetDuration("kafka.CONN_TIMEOUT")*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, cfg.GetDuration("kafka.CONN_TIMEOUT"))
 	defer cancel()
 
 	if err = client.Ping(ctx); err != nil {

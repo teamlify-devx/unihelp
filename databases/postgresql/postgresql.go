@@ -3,7 +3,6 @@ package postgresql
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	cfg "github.com/spf13/viper"
@@ -25,10 +24,10 @@ func NewPostgresqlDB() (*pgxpool.Pool, error) {
 	}
 
 	poolCfg.MaxConns = cfg.GetInt32("postgresql.MAX_CONN")
-	poolCfg.MaxConnIdleTime = cfg.GetDuration("postgresql.CONN_MAX_IDLE_TIME") * time.Minute
-	poolCfg.MaxConnLifetime = cfg.GetDuration("postgresql.CONN_MAX_LIFETIME") * time.Minute
+	poolCfg.MaxConnIdleTime = cfg.GetDuration("postgresql.CONN_MAX_IDLE_TIME")
+	poolCfg.MaxConnLifetime = cfg.GetDuration("postgresql.CONN_MAX_LIFETIME")
 
-	ctx, cancel := context.WithTimeout(context.Background(), cfg.GetDuration("postgresql.CONN_TIMEOUT")*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), cfg.GetDuration("postgresql.CONN_TIMEOUT"))
 	defer cancel()
 
 	pool, err := pgxpool.NewWithConfig(ctx, poolCfg)
